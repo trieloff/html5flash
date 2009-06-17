@@ -4,7 +4,24 @@
     <title></title>
     <script src="html5flash.js"></script>
   </head>
-  <body onload="getHTML5Tags()">
+  <body onload="runTests()">
     <audio src="Greensleves.ogg" autoplay="true" autobuffer="true" loop="true" controls="true"></audio>
+    <div id="test1">
+    
+    </div>
+    <script type="text/javascript">
+    function runTests() {
+      var html5tags = getHTML5Tags();
+      out = "";
+      out += "<br/>src: " + html5tags[0].src;
+      out += "<br/>autobuffer: " + html5tags[0].autobuffer;
+      out += "<br/>autoplay: " + html5tags[0].autoplay;
+      out += "<br/>loop: " + html5tags[0].loop;
+      out += "<br/>controls: " + html5tags[0].controls;
+      out += "<br/>played: " + (html5tags[0].played instanceof TimeRanges);
+      document.getElementById("test1").innerHTML=out;
+      
+    }
+    </script>
   </body>
 </html>
