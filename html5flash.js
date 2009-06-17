@@ -118,7 +118,7 @@ var HTMLMediaElement = Class.extend({
   startTime: 0.0,
   //readonly
   duration: 0.0,
-  paused: 0.0,
+  paused: false,
   defaultPlaybackRate: 1.0,
   playbackRate: 1.0,
   //TimeRanges - readonly
@@ -128,7 +128,7 @@ var HTMLMediaElement = Class.extend({
   autoplay: false,
   loop: false,
   controls: false,
-  volume: 0,
+  volume: 1,
   muted: false,
   
   init: function(element) {
@@ -272,9 +272,51 @@ var HTMLVideoElement = HTMLMediaElement.extend({
 });
 
 var HTMLAudioElement = HTMLMediaElement.extend({
+    id: "id" + (new Date().getTime()),
+    sound: null,
+    
     //no additional properties
     init: function(element) {
       this._super(element);
+      
+      if (this.domElement.getAttribute("id")) {
+        this.id = this.domElement.getAttribute("id");
+      }
+      
+      var that = this;
+      this.sound = soundManager.createSound({
+          id: that.id,
+          url: that.currentSrc,
+          autoLoad: that.autobuffer,
+          autoPlay: that.autoplay,
+          onfinish: that.onfinish
+      });
+    },
+    
+    onfinish: function(e) {
+      if (this.loop) {
+        this.sound.play();
+      } else {
+        this.ended = true;
+      }
+    },
+    
+    play: function() {
+      if (this.muted) {
+        this.sound.setVolume(0);
+      } else {
+        this.sound.setVolume(Math.floor(100*Math.max(0, Math.min(1,this.volume))));
+      }
+      
+      if (this.sound.playState==1) {
+        this.sound.resume();
+      } else {
+        this.sound.play();
+      }
+    },
+    
+    pause: function() {
+      this.sound.pause();
     },
     
     canPlayType: function(type) {

@@ -2,22 +2,28 @@
 <html>
   <head>
     <title></title>
-    <script src="html5flash.js"></script>
+    <style type="text/css">
+      #soundmanager-debug {
+       /* SM2 debug container (optional, use or customize this as you like - makes in-browser debug output more useable) */
+       position:fixed;_position:absolute;right:1em;bottom:1em;width:50em;height:18em;overflow:auto;background:#fff;margin:1em;padding:1em;border:1px solid #999;font-family:monaco,"lucida console",verdana,tahoma,"sans serif";font-size:x-small;line-height:1.5em;opacity:0.9;filter:alpha(opacity=90);
+      }
+      </style>
+    
   </head>
   <body onload="runTests()">
-    <audio src="media/audio.mp3" autoplay="true" autobuffer="true" loop="true" controls="true"></audio>
+    <audio src="media/audio.mp3" autoplay="false" autobuffer="true" loop="true" controls="true"></audio>
     <div id="test1">
     
     </div>
     
-    <audio autoplay="true" autobuffer="true" loop="true" controls="false">
+    <audio id="soundauto" autoplay="false" autobuffer="false" loop="true" controls="false">
       <source type="audio/x-aac" ></source>
       <source src="media/audio.aac" type="audio/x-aac" ></source>
       <source src="media/audio.flac" type="audio/x-flac"></source>
       <source src="media/audio.ogg" type="audio/ogg" ></source>
       <source src="media/audio.wmv" type="audio/wmv" ></source>
-      <source src="media/audio.wav" type="audio/wav" ></source>
       <source src="media/audio.mp3" type="audio/mp3" ></source>
+      <source src="media/audio.wav" type="audio/wav" ></source>
     </audio>
     <div id="test2">
     
@@ -41,6 +47,27 @@
       out += "<br/>played: " + (html5tags[0].played instanceof TimeRanges);
       document.getElementById("test1").innerHTML=out;
       
+      //html5tags[0].play();
+      
+      window.setTimeout(function() {
+        html5tags[0].play();
+      },1000);
+      window.setTimeout(function() {
+        html5tags[0].pause();
+      },3000);
+      window.setTimeout(function() {
+        html5tags[0].volume = 0.5;
+        html5tags[0].play();
+      },5000);
+      window.setTimeout(function() {
+        html5tags[0].muted = true;
+        html5tags[0].play();
+      },7000);
+      
+      window.setTimeout(function() {
+        html5tags[0].muted = false;
+        html5tags[0].play();
+      },9000);
       
       out = "";
       out += "<br/>currentSrc: " + html5tags[1].currentSrc;
@@ -53,5 +80,10 @@
       
     }
     </script>
+    <script type="text/javascript">
+        soundManager.debugMode = false;
+      </script>
+    <script src="soundmanager2.js"></script>
+    <script src="html5flash.js"></script>
   </body>
 </html>
