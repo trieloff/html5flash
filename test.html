@@ -11,12 +11,12 @@
     
   </head>
   <body onload="runTests()">
-    <audio src="media/audio.mp3" autoplay="false" autobuffer="true" loop="true" controls="true"></audio>
+    <audio src="media/audio.mp3" autobuffer="true" loop="true" controls="true"></audio>
     <div id="test1">
     
     </div>
     
-    <audio id="soundauto" autoplay="false" autobuffer="false" loop="true" controls="false">
+    <audio id="soundauto" autobuffer="false">
       <source type="audio/x-aac" ></source>
       <source src="media/audio.aac" type="audio/x-aac" ></source>
       <source src="media/audio.flac" type="audio/x-flac"></source>
@@ -29,7 +29,7 @@
     
     </div>
     
-    <video controls="true">
+    <video controls="false">
       <source src="media/video.ogg" type="video/ogg" ></source>
       <source src="media/video.mov" type="video/quicktime" ></source>
       <source src="media/video.flv" type="video/flv" ></source>

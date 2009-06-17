@@ -134,10 +134,10 @@ var HTMLMediaElement = Class.extend({
   init: function(element) {
     this.domElement = element;
     this.src = this.domElement.getAttribute("src");
-    this.autobuffer = (this.domElement.getAttribute("autobuffer")=="true");
-    this.autoplay = (this.domElement.getAttribute("autoplay")=="true");
-    this.loop = (this.domElement.getAttribute("loop")=="true");
-    this.controls = (this.domElement.getAttribute("controls")=="true");
+    this.autobuffer = (this.domElement.getAttribute("autobuffer")!=null);
+    this.autoplay = (this.domElement.getAttribute("autoplay")!=null);
+    this.loop = (this.domElement.getAttribute("loop")!=null);
+    this.controls = (this.domElement.getAttribute("controls")!=null);
     this.load();
   },
   
