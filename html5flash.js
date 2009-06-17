@@ -101,7 +101,7 @@ var HTMLMediaElement = Class.extend({
   //attribute DOMString src;
   src: null,
   //readonly attribute currentSrc
-  currentSrc: this.src,
+  currentSrc: null,
   //readonly attribute unsigned short networkState
   networkState: this.NETWORK_EMPTY,
   //attribute boolean autobuffer
@@ -120,6 +120,7 @@ var HTMLMediaElement = Class.extend({
   duration: 0.0,
   paused: 0.0,
   defaultPlaybackRate: 1.0,
+  playbackRate: 1.0,
   //TimeRanges - readonly
   played: new TimeRanges(),
   seekable: new TimeRanges(),
@@ -133,12 +134,16 @@ var HTMLMediaElement = Class.extend({
   init: function(element) {
     this.domElement = element;
     this.src = this.domElement.getAttribute("src");
-    this.currentSrc = this.src;
     this.autobuffer = (this.domElement.getAttribute("autobuffer")=="true");
     this.autoplay = (this.domElement.getAttribute("autoplay")=="true");
     this.loop = (this.domElement.getAttribute("loop")=="true");
     this.controls = (this.domElement.getAttribute("controls")=="true");
-    
+    this.load();
+  },
+  
+  //returns void
+  load: function() {
+    this.currentSrc = this.src;
     //find the right source
     var candidate = this.domElement.firstChild;
     var maybe = null;
@@ -159,12 +164,7 @@ var HTMLMediaElement = Class.extend({
     if (this.currentSrc==null&&maybe!=null) {
       this.currentSrc = maybe;
     }
-    
-  },
-  
-  //returns void
-  load: function() {
-    //TODO
+    //override this in concrete implementations to build the widget
   },
   
   //returns String
@@ -174,10 +174,12 @@ var HTMLMediaElement = Class.extend({
   
   play: function() {
     //TODO
+    //purely abstract
   },
   
   pause: function() {
     //TODO
+    //purely abstract
   },
   
   //returns void
@@ -186,10 +188,71 @@ var HTMLMediaElement = Class.extend({
   //pauseOnExit - boolean
   //enterCallback, exitCallback - function
   addCueRange: function(className, id, start, end, pauseOnExit, enterCallback, exitCallback) {
+    if (!this.cueRanges[className]||this.cueRanges[className]==null) {
+      this.cueRanges[className] = [];
+    }
     
+    var cueRange = {
+      start: start,
+      end: end,
+      pauseOnExit: pauseOnExit,
+      enterCallback: enterCallback,
+      exitCallback: exitCallback,
+    };
+    this.cueRanges[className].push(cueRange);
+  },
+  
+  removeCueRange: function(className) {
+    //reset cue ranges
+    cueRanges[className] = [];
+  },
+  
+  //private
+  cueRanges: {},
+  lastPosition: 0.0,
+  
+  checkCueRanges(currentPosition) {
+    var entering = [];
+    var exititing = [];
+    for (className in this.cueRanges) {
+      if (this.cueRanges.hasOwnProperty(className)) {
+        var cues = this.cueRanges[className];
+        for (var i=0;i<cues.length;i++) {
+          var cue = cues[i];
+          if (currentPosition>this.lastPosition) {
+            if (cue.start>this.lastPosition&&cue.start<currentPosition) {
+              entering.push(cue);
+            }
+            if (cue.end>this.lastPosition&&cue.end<currentPosition) {
+              exititing.push(cue);
+            }
+          } else if (currentPosition<this.lastPosition) {
+            if (cue.end>lastPosition&&cue.end<currentPosition) {
+              entering.push(cue);
+            }
+            if (cue.start>lastPosition&&cue.start<currentPosition) {
+              exititing.push(cue);
+            }
+          }
+        }
+      }
+    }
+    //call the entering events
+    for (var i=0;i<entering.length;i++) {
+      if (entering[i].enterCallback) {
+        entering[i].enterCallback.call(this, entering[i].id);
+      }
+    }
+    //call the exiting events
+    for (var i=0;i<exiting.length;i++) {
+      if (exiting[i].exitCallback) {
+        exiting[i].exitCallback.call(this, exiting[i].id);
+      }
+      if (exiting[i].pauseOnExit) {
+        this.pause();
+      }
+    }
   }
-  
-  
 });
 
 var HTMLVideoElement = HTMLMediaElement.extend({
