@@ -133,10 +133,33 @@ var HTMLMediaElement = Class.extend({
   init: function(element) {
     this.domElement = element;
     this.src = this.domElement.getAttribute("src");
+    this.currentSrc = this.src;
     this.autobuffer = (this.domElement.getAttribute("autobuffer")=="true");
     this.autoplay = (this.domElement.getAttribute("autoplay")=="true");
     this.loop = (this.domElement.getAttribute("loop")=="true");
     this.controls = (this.domElement.getAttribute("controls")=="true");
+    
+    //find the right source
+    var candidate = this.domElement.firstChild;
+    var maybe = null;
+    //loop until we have found a type that works probably
+    while(candidate!=null&&this.currentSrc==null) {
+      if (candidate.nodeName=="SOURCE"||candidate.nodeName=="source") {
+        if (candidate.getAttribute("src")!=null) {
+          if (this.canPlayType(candidate.getAttribute("type"))=="probably") {
+            this.currentSrc = candidate.getAttribute("src");
+          } else if (maybe==null&&this.canPlayType(candidate.getAttribute("type"))=="maybe") {
+            maybe = candidate.getAttribute("src");
+          }
+        }
+      }
+      candidate = candidate.nextSibling;
+    }
+    //fall back to the first type that works maybe
+    if (this.currentSrc==null&&maybe!=null) {
+      this.currentSrc = maybe;
+    }
+    
   },
   
   //returns void
@@ -146,7 +169,7 @@ var HTMLMediaElement = Class.extend({
   
   //returns String
   canPlayType: function(type) {
-    //TODO
+    return "no";
   },
   
   play: function() {
@@ -186,6 +209,22 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     //no additional properties
     init: function(element) {
       this._super(element);
+    },
+    
+    canPlayType: function(type) {
+      if (type.match(/^audio\/mp3/)) {
+        return "probably";
+      }
+      if (type.match(/^audio\/wav/)) {
+        return "probably";
+      }
+      if (type.match(/^audio\/(x-)?aiff/)) {
+        return "probably";
+      }
+      if (type.match(/^audio\//)) {
+        return "maybe";
+      }
+      return "no";
     }
 });
 

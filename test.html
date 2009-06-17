@@ -5,10 +5,24 @@
     <script src="html5flash.js"></script>
   </head>
   <body onload="runTests()">
-    <audio src="Greensleves.ogg" autoplay="true" autobuffer="true" loop="true" controls="true"></audio>
+    <audio src="media/audio.mp3" autoplay="true" autobuffer="true" loop="true" controls="true"></audio>
     <div id="test1">
     
     </div>
+    
+    <audio autoplay="true" autobuffer="true" loop="true" controls="false">
+      <source type="audio/x-aac" ></source>
+      <source src="media/audio.aac" type="audio/x-aac" ></source>
+      <source src="media/audio.flac" type="audio/x-flac"></source>
+      <source src="media/audio.ogg" type="audio/ogg" ></source>
+      <source src="media/audio.wmv" type="audio/wmv" ></source>
+      <source src="media/audio.wav" type="audio/wav" ></source>
+      <source src="media/audio.mp3" type="audio/mp3" ></source>
+    </audio>
+    <div id="test2">
+    
+    </div>
+    
     <script type="text/javascript">
     function runTests() {
       var html5tags = getHTML5Tags();
@@ -20,6 +34,16 @@
       out += "<br/>controls: " + html5tags[0].controls;
       out += "<br/>played: " + (html5tags[0].played instanceof TimeRanges);
       document.getElementById("test1").innerHTML=out;
+      
+      
+      out = "";
+      out += "<br/>currentSrc: " + html5tags[1].currentSrc;
+      out += "<br/>autobuffer: " + html5tags[1].autobuffer;
+      out += "<br/>autoplay: " + html5tags[1].autoplay;
+      out += "<br/>loop: " + html5tags[1].loop;
+      out += "<br/>controls: " + html5tags[1].controls;
+      out += "<br/>played: " + (html5tags[1].played instanceof TimeRanges);
+      document.getElementById("test2").innerHTML=out;
       
     }
     </script>
