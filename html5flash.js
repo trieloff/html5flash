@@ -211,7 +211,7 @@ var HTMLMediaElement = Class.extend({
   cueRanges: {},
   lastPosition: 0.0,
   
-  checkCueRanges(currentPosition) {
+  checkCueRanges: function(currentPosition) {
     var entering = [];
     var exititing = [];
     for (className in this.cueRanges) {
