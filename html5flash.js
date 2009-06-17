@@ -299,11 +299,17 @@ function getHTML5Tags() {
   var videos = document.getElementsByTagName("video");
   var html5tags = [];
   for (var i=0;i<audios.length;i++) {
+    if (audios[i].play) {
+      html5tags.push(audios[i]);
+    }
     html5tags.push(new HTMLAudioElement(audios[i]));
   }
   
   for (var i=0;i<videos.length;i++) {
-    html5tags.push(new HTMLVideoElement(audios[i]));
+    if (videos[i].play) {
+      html5tags.push(videos[i]);
+    }
+    html5tags.push(new HTMLVideoElement(videos[i]));
   }
   return html5tags;
 }
