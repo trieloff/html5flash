@@ -1,3 +1,4 @@
+//from http://ejohn.org/blog/simple-javascript-inheritance/
 // Inspired by base2 and Prototype
 (function(){
   var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
@@ -58,6 +59,26 @@
   };
 })();
 
+//considered for removal in HTML5
+var TimeRanges = Class.extend({
+    //readonly
+    length: 0,
+    start: function(index) {
+      return this.starts[index];
+    },
+    end: function(index) {
+      return this.ends[index];
+    },
+    //private
+    starts: [],
+    ends: [],
+    add: function(start, end) {
+      this.starts.push(start);
+      this.ends.push(end);
+      this.length++;
+    }
+});
+
 var HTMLMediaElement = Class.extend({
   //network state
   NETWORK_EMPTY: 0,
@@ -100,8 +121,8 @@ var HTMLMediaElement = Class.extend({
   paused: 0.0,
   defaultPlaybackRate: 1.0,
   //TimeRanges - readonly
-  played: null,
-  seekable: null,
+  played: new TimeRanges(),
+  seekable: new TimeRanges(),
   ended: false,
   autoplay: false,
   loop: false,
@@ -112,7 +133,10 @@ var HTMLMediaElement = Class.extend({
   init: function(element) {
     this.domElement = element;
     this.src = this.domElement.getAttribute("src");
-    alert(this.src);
+    this.autobuffer = (this.domElement.getAttribute("autobuffer")=="true");
+    this.autoplay = (this.domElement.getAttribute("autoplay")=="true");
+    this.loop = (this.domElement.getAttribute("loop")=="true");
+    this.controls = (this.domElement.getAttribute("controls")=="true");
   },
   
   //returns void
