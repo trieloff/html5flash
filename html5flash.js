@@ -265,6 +265,9 @@ var HTMLVideoElement = HTMLMediaElement.extend({
     
     init: function(element) {
       this._super(element);
+      this.height = this.domElement.getAttribute("height");
+      this.width = this.domElement.getAttribute("width");
+      this.poster = this.domElement.getAttribute("poster");
     }
 });
 
