@@ -228,10 +228,10 @@ var HTMLMediaElement = Class.extend({
                 exititing.push(cue);
               }
             } else if (currentPosition<this.lastPosition) {
-              if (cue.end>lastPosition&&cue.end<currentPosition) {
+              if (cue.end>this.lastPosition&&cue.end<currentPosition) {
                 entering.push(cue);
               }
-              if (cue.start>lastPosition&&cue.start<currentPosition) {
+              if (cue.start>this.lastPosition&&cue.start<currentPosition) {
                 exititing.push(cue);
               }
             }
