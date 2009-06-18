@@ -177,6 +177,10 @@ var HTMLMediaElement = Class.extend({
     if (this.currentSrc==null&&maybe!=null) {
       this.currentSrc = maybe;
     }
+    if (this.currentSrc==null) {
+      //media selection failed
+      this.error = new MediaError(MediaError.prototype.MEDIA_ERR_SRC_NOT_SUPPORTED);
+    }
     //override this in concrete implementations to build the widget
   },
   
@@ -325,20 +329,31 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     
     
     whileloading: function() {
-      
       if (this.readyState==3) {
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
+        this.wrapper.duration = this.duration;
       } else if (this.readyState==2) {
         //error
         this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
       } else if (this.readyState==1) {
         //loading
-        this.wrapper.networkState = this.wrapper.LOADING;
+        this.wrapper.networkState = this.wrapper.NETWORK_LOADING;
+        this.wrapper.duration = this.durationEstimate;
       } else if (this.readyState==0) {
         //uninitialized
-        this.wrapper.networkState = this.wrapper.EMPTY;
+        this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
       }
       console.log(this.wrapper.networkState);
+    },
+    
+    onload: function(success) {
+      if (success) {
+        this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
+        this.wrapper.duration = this.duration;
+      } else {
+        this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
+        this.wrapper.error = new MediaError(MediaError.prototype.NETWORK);
+      }
     },
     
     whileplaying: function() {
