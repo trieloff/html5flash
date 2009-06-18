@@ -79,6 +79,19 @@ var TimeRanges = Class.extend({
     }
 });
 
+var MediaError = Class.extend({
+    //readonly
+    code: -1,
+    init: function(code) {
+      this.code = code;
+    },
+    
+    MEDIA_ERR_ABORTED: 1,
+    MEDIA_ERR_NETWORK: 2,
+    MEDIA_ERR_DECODE:3,
+    MEDIA_ERR_SRC_NOT_SUPPORTED: 4
+});
+
 var HTMLMediaElement = Class.extend({
   //network state
   NETWORK_EMPTY: 0,
@@ -308,6 +321,8 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         this.wrapper.ended = true;
       }
     },
+    
+    
     
     whileloading: function() {
       
