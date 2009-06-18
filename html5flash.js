@@ -221,6 +221,30 @@ var HTMLMediaElement = Class.extend({
     this.listeners[type] = newarray;
   },
   
+  throwEvent: function(type) {
+    var that = this;
+    var e = {
+      type: type,
+      target: that,
+      currentTarget: that,
+      eventPhase: 2,
+      bubbles: false,
+      cancelable: false,
+      timeStamp: new Date(),
+      stopPropagation: function() {},
+      preventDefault: function() {},
+      initEvent: function() {}
+    };
+    
+    if (this.listeners[type]) {
+      for (var i=0;i<this.listeners[type].length;i++) {
+        var listener = this.listeners[type][i];
+        try {
+          listener.call(this, e);
+        } catch (t) {/*go through all event listeners*/}
+      }
+    }
+  }
   
   //returns void
   //className, id - String
