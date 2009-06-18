@@ -314,6 +314,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           autoLoad: that.autobuffer,
           autoPlay: that.autoplay,
           whileloading: that.whileloading,
+          onid3: that.onid3
       });
       this.sound.wrapper = this;
     },
@@ -326,12 +327,15 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       }
     },
     
-    
+    onid3: function() {
+      this.wrapper.HAVE_METADATA;
+    },
     
     whileloading: function() {
       if (this.readyState==3) {
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
-        this.wrapper.duration = this.duration;
+        this.wrapper.duration = this.duration / 1000;
+        this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
       } else if (this.readyState==2) {
         //error
         this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
@@ -339,6 +343,11 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         //loading
         this.wrapper.networkState = this.wrapper.NETWORK_LOADING;
         this.wrapper.duration = this.durationEstimate;
+        if (this.duration==this.position) {
+          this.wrapper.readyState = this.wrapper.HAVE_CURRENT_DATA;
+        } else if (this.duration>this.position) {
+          this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
+        }
       } else if (this.readyState==0) {
         //uninitialized
         this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
@@ -349,8 +358,10 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     onload: function(success) {
       if (success) {
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
+        this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
         this.wrapper.duration = this.duration;
       } else {
+        this.wrapper.readyState = this.wrapper.HAVE_NOTHING;
         this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
         this.wrapper.error = new MediaError(MediaError.prototype.NETWORK);
       }
@@ -379,6 +390,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
             whileplaying: that.whileplaying,
             position: Math.floor(that.startTime * 1000),
             whileloading: that.whileloading,
+            onid3: that.onid3
         });
       }
     },
