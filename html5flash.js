@@ -212,46 +212,52 @@ var HTMLMediaElement = Class.extend({
   lastPosition: 0.0,
   
   checkCueRanges: function(currentPosition) {
-    var entering = [];
-    var exititing = [];
-    for (className in this.cueRanges) {
-      if (this.cueRanges.hasOwnProperty(className)) {
-        var cues = this.cueRanges[className];
-        for (var i=0;i<cues.length;i++) {
-          var cue = cues[i];
-          if (currentPosition>this.lastPosition) {
-            if (cue.start>this.lastPosition&&cue.start<currentPosition) {
-              entering.push(cue);
-            }
-            if (cue.end>this.lastPosition&&cue.end<currentPosition) {
-              exititing.push(cue);
-            }
-          } else if (currentPosition<this.lastPosition) {
-            if (cue.end>lastPosition&&cue.end<currentPosition) {
-              entering.push(cue);
-            }
-            if (cue.start>lastPosition&&cue.start<currentPosition) {
-              exititing.push(cue);
+    try {
+      var entering = new Array();
+      var exititing = new Array();
+      for (className in this.cueRanges) {
+        if (this.cueRanges.hasOwnProperty(className)) {
+          var cues = this.cueRanges[className];
+          for (var i=0;i<cues.length;i++) {
+            var cue = cues[i];
+            if (currentPosition>this.lastPosition) {
+              if (cue.start>this.lastPosition&&cue.start<currentPosition) {
+                entering.push(cue);
+              }
+              if (cue.end>this.lastPosition&&cue.end<currentPosition) {
+                exititing.push(cue);
+              }
+            } else if (currentPosition<this.lastPosition) {
+              if (cue.end>lastPosition&&cue.end<currentPosition) {
+                entering.push(cue);
+              }
+              if (cue.start>lastPosition&&cue.start<currentPosition) {
+                exititing.push(cue);
+              }
             }
           }
         }
       }
-    }
-    //call the entering events
-    for (var i=0;i<entering.length;i++) {
-      if (entering[i].enterCallback) {
-        entering[i].enterCallback.call(this, entering[i].id);
+      
+      //call the entering events
+      for (var i=0;i<entering.length;i++) {
+        if (entering[i].enterCallback) {
+          entering[i].enterCallback.call(this, entering[i].id);
+        }
       }
-    }
-    //call the exiting events
-    for (var i=0;i<exiting.length;i++) {
-      if (exiting[i].exitCallback) {
-        exiting[i].exitCallback.call(this, exiting[i].id);
+      //call the exiting events
+      for (var i=0;i<exititing.length;i++) {
+        if (exititing[i].exitCallback) {
+          exititing[i].exitCallback.call(this, exititing[i].id);
+        }
+        if (exititing[i].pauseOnExit) {
+          this.pause();
+        }
       }
-      if (exiting[i].pauseOnExit) {
-        this.pause();
-      }
+    } catch (e) {
+      console.error(e);
     }
+    this.lastPosition = currentPosition;
   }
 });
 
@@ -301,6 +307,11 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       }
     },
     
+    whileplaying: function() {
+      this.wrapper.currentTime = this.position / 1000;
+      this.wrapper.checkCueRanges(this.position / 1000);
+    },
+    
     play: function() {
       if (this.muted) {
         this.sound.setVolume(0);
@@ -313,7 +324,10 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       } else {
         var that = this;
         this.sound.wrapper = this;
-        this.sound.play({onfinish: that.onfinish});
+        this.sound.play({
+            onfinish: that.onfinish,
+            whileplaying: that.whileplaying
+        });
       }
     },
     
