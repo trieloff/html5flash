@@ -143,6 +143,7 @@ var HTMLMediaElement = Class.extend({
   controls: false,
   volume: 1,
   muted: false,
+  listeners: {},
   
   init: function(element) {
     this.domElement = element;
@@ -198,6 +199,28 @@ var HTMLMediaElement = Class.extend({
     //TODO
     //purely abstract
   },
+  
+  addEventListener: function(type, listener, useCapture) {
+    if (this.listeners[type]) {
+      this.listeners[type].push(listener);
+    } else {
+      this.listeners[type] = [ listener ];
+    }
+  },
+  
+  removeEventListener: function(type, listener, useCapture) {
+    var newarray = [];
+    if (this.listeners[type]) {
+      var oldarray = this.listeners[type];
+      for (var i=0;i<oldarray.length;i++) {
+        if (oldarray[i]!=listener) {
+          newarray.push(oldarray[i]);
+        }
+      }
+    }
+    this.listeners[type] = newarray;
+  },
+  
   
   //returns void
   //className, id - String
