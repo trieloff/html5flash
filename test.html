@@ -49,7 +49,8 @@
       
       //html5tags[0].play();
       
-      html5tags[0].addCueRange("test", "test", 11, 13, true, function() {console.log("entering")}, function() {console.log("exiting")});
+      html5tags[0].startTime = 2.0;
+      html5tags[0].addCueRange("test", "test", 13, 15, true, function() {console.log("entering")}, function() {console.log("exiting")});
       
       window.setTimeout(function() {
         html5tags[0].play();

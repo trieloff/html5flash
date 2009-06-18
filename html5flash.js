@@ -300,7 +300,6 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     
     onfinish: function(e) {
       if (this.wrapper.loop) {
-        console.log("loop");
         this.wrapper.play();
       } else {
         this.wrapper.ended = true;
@@ -320,13 +319,15 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       }
       
       if (this.sound.playState==1) {
+        this.sound.position = Math.floor(this.currentTime * 1000);
         this.sound.resume();
       } else {
         var that = this;
         this.sound.wrapper = this;
         this.sound.play({
             onfinish: that.onfinish,
-            whileplaying: that.whileplaying
+            whileplaying: that.whileplaying,
+            position: Math.floor(that.startTime * 1000)
         });
       }
     },
