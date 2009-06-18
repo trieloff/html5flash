@@ -290,12 +290,15 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       }
       
       var that = this;
+      
       this.sound = soundManager.createSound({
           id: that.id,
           url: that.currentSrc,
           autoLoad: that.autobuffer,
           autoPlay: that.autoplay,
+          whileloading: that.whileloading,
       });
+      this.sound.wrapper = this;
     },
     
     onfinish: function(e) {
@@ -304,6 +307,23 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       } else {
         this.wrapper.ended = true;
       }
+    },
+    
+    whileloading: function() {
+      
+      if (this.readyState==3) {
+        this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
+      } else if (this.readyState==2) {
+        //error
+        this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
+      } else if (this.readyState==1) {
+        //loading
+        this.wrapper.networkState = this.wrapper.LOADING;
+      } else if (this.readyState==0) {
+        //uninitialized
+        this.wrapper.networkState = this.wrapper.EMPTY;
+      }
+      console.log(this.wrapper.networkState);
     },
     
     whileplaying: function() {
@@ -327,7 +347,8 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         this.sound.play({
             onfinish: that.onfinish,
             whileplaying: that.whileplaying,
-            position: Math.floor(that.startTime * 1000)
+            position: Math.floor(that.startTime * 1000),
+            whileloading: that.whileloading,
         });
       }
     },
