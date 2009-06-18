@@ -336,6 +336,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
         this.wrapper.duration = this.duration / 1000;
         this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
+        this.wrapper.updateSeekable(this.duration / 1000);
       } else if (this.readyState==2) {
         //error
         this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
@@ -348,11 +349,11 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         } else if (this.duration>this.position) {
           this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
         }
+        this.wrapper.updateSeekable(this.duration / 1000);
       } else if (this.readyState==0) {
         //uninitialized
         this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
       }
-      console.log(this.wrapper.networkState);
     },
     
     onload: function(success) {
@@ -370,6 +371,29 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     whileplaying: function() {
       this.wrapper.currentTime = this.position / 1000;
       this.wrapper.checkCueRanges(this.position / 1000);
+      this.wrapper.updatePlayed(this.position / 1000);
+    },
+    
+    //updates the played time range
+    updatePlayed: function(currentTime) {
+      if (this.played.length==0) {
+        //create a new time range
+        this.played.add(this.startTime, currentTime);
+      } else {
+        //extend the last time range
+        this.played.ends[this.played.length-1] = currentTime;
+      }
+    },
+    
+    //updates the played time range
+    updateSeekable: function(currentTime) {
+      if (this.seekable.length==0) {
+        //create a new time range
+        this.seekable.add(this.startTime, currentTime);
+      } else {
+        //extend the last time range
+        this.seekable.ends[this.seekable.length-1] = currentTime;
+      }
     },
     
     play: function() {
