@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style type="text/css">
+      #soundmanager-debug {
+       /* SM2 debug container (optional, use or customize this as you like - makes in-browser debug output more useable) */
+       position:fixed;_position:absolute;right:1em;bottom:1em;width:50em;height:18em;overflow:auto;background:#fff;margin:1em;padding:1em;border:1px solid #999;font-family:monaco,"lucida console",verdana,tahoma,"sans serif";font-size:x-small;line-height:1.5em;opacity:0.9;filter:alpha(opacity=90);
+      }
+      </style>
+    
+  </head>
+  <body onload="runTests()">
+    <audio src="media/audio.mp3" autobuffer="true" loop="true" controls="true"></audio>
+    <div id="test1">
+    
+    </div>
+
+    <script type="text/javascript">
+    function runTests() {
+      var html5tags = getHTML5Tags();
+      out = "";
+      out += "<br/>src: " + html5tags[0].src;
+      out += "<br/>autobuffer: " + html5tags[0].autobuffer;
+      out += "<br/>autoplay: " + html5tags[0].autoplay;
+      out += "<br/>loop: " + html5tags[0].loop;
+      out += "<br/>controls: " + html5tags[0].controls;
+      out += "<br/>played: " + (html5tags[0].played instanceof TimeRanges);
+      document.getElementById("test1").innerHTML=out;
+      
+      //html5tags[0].play();
+      
+      window.setTimeout(function() {
+        html5tags[0].play();
+      },1000);
+    }
+    </script>
+    <script type="text/javascript">
+        soundManager.debugMode = false;
+      </script>
+    <script src="soundmanager2.js"></script>
+    <script src="html5flash.js"></script>
+  </body>
+</html>

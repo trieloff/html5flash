@@ -289,15 +289,15 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           url: that.currentSrc,
           autoLoad: that.autobuffer,
           autoPlay: that.autoplay,
-          onfinish: that.onfinish
       });
     },
     
     onfinish: function(e) {
-      if (this.loop) {
-        this.sound.play();
+      if (this.wrapper.loop) {
+        console.log("loop");
+        this.wrapper.play();
       } else {
-        this.ended = true;
+        this.wrapper.ended = true;
       }
     },
     
@@ -311,7 +311,9 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       if (this.sound.playState==1) {
         this.sound.resume();
       } else {
-        this.sound.play();
+        var that = this;
+        this.sound.wrapper = this;
+        this.sound.play({onfinish: that.onfinish});
       }
     },
     
