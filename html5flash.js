@@ -401,7 +401,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       } else if (this.readyState==1) {
         //loading
         this.wrapper.networkState = this.wrapper.NETWORK_LOADING;
-        var durationchange (this.wrapper.duration!=this.durationEstimate / 1000) ? true : false;
+        var durationchange = (this.wrapper.duration!=this.durationEstimate / 1000) ? true : false;
         this.wrapper.duration = this.durationEstimate / 1000;
         
         if (this.duration==this.position) {
@@ -432,7 +432,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       if (success) {
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
         this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
-        var durationchange (this.wrapper.duration!=this.duration / 1000) ? true : false;
+        var durationchange = (this.wrapper.duration!=this.duration / 1000) ? true : false;
         this.wrapper.duration = this.duration / 1000;
         if (durationchange) this.wrapper.throwEvent("durationchange");
         this.wrapper.throwEvent("canplaythrough");
