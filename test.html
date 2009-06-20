@@ -37,6 +37,7 @@
     
     <script type="text/javascript">
     function runTests() {
+      console.log("starting tests");
       var html5tags = getHTML5Tags();
       out = "";
       out += "<br/>src: " + html5tags[0].src;
@@ -83,6 +84,7 @@
     }
     </script>
     <script type="text/javascript">
+        soundManager = {};
         soundManager.debugMode = false;
       </script>
     <script src="soundmanager2.js"></script>
