@@ -273,6 +273,34 @@ var HTMLMediaElement = Class.extend({
     }
   },
   
+  play: function() {
+    if (this.muted) {
+      this.sound.setVolume(0);
+    } else {
+      this.sound.setVolume(Math.floor(100*Math.max(0, Math.min(1,this.volume))));
+    }
+    
+    if (this.sound.playState==1) {
+      this.sound.position = Math.floor(this.currentTime * 1000);
+      this.sound.resume();
+    } else {
+      var that = this;
+      this.sound.wrapper = this;
+      this.sound.play({
+          onfinish: that.onfinish,
+          whileplaying: that.whileplaying,
+          position: Math.floor(that.startTime * 1000),
+          whileloading: that.whileloading,
+          onid3: that.onid3
+      });
+    }
+    this.throwEvent("play");
+  },
+  
+  pause: function() {
+    this.sound.pause();
+    this.throwEvent("pause");
+  },
 
   
   //returns void
@@ -478,36 +506,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       };
       return soundconfig;
     },
-    
-    play: function() {
-      if (this.muted) {
-        this.sound.setVolume(0);
-      } else {
-        this.sound.setVolume(Math.floor(100*Math.max(0, Math.min(1,this.volume))));
-      }
-      
-      if (this.sound.playState==1) {
-        this.sound.position = Math.floor(this.currentTime * 1000);
-        this.sound.resume();
-      } else {
-        var that = this;
-        this.sound.wrapper = this;
-        this.sound.play({
-            onfinish: that.onfinish,
-            whileplaying: that.whileplaying,
-            position: Math.floor(that.startTime * 1000),
-            whileloading: that.whileloading,
-            onid3: that.onid3
-        });
-      }
-      this.throwEvent("play");
-    },
-    
-    pause: function() {
-      this.sound.pause();
-      this.throwEvent("pause");
-    },
-    
+        
     canPlayType: function(type) {
       if (type.match(/^audio\/mp3/)) {
         return "probably";
