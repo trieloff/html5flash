@@ -379,6 +379,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     
     onid3: function() {
       this.wrapper.HAVE_METADATA;
+      this.wrapper.throwEvent("loadedmetadata");
     },
     
     whileloading: function() {
