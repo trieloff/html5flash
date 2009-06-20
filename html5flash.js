@@ -153,7 +153,20 @@ var HTMLMediaElement = Class.extend({
     this.loop = (this.domElement.getAttribute("loop")!=null);
     this.controls = (this.domElement.getAttribute("controls")!=null);
     this.load();
+    
+    if (this.domElement.getAttribute("id")) {
+      this.id = this.domElement.getAttribute("id");
+    }
+    
+    this.sound = this.createSound();
+    
+    this.throwEvent("loadstart");
+    this.sound.wrapper = this;
   },
+  
+  createSound: function() {
+    return {};
+  }
   
   //returns void
   load: function() {
@@ -322,7 +335,10 @@ var HTMLMediaElement = Class.extend({
       console.error(e);
     }
     this.lastPosition = currentPosition;
-  }
+  },
+  
+  id: "id" + (new Date().getTime()),
+  sound: null
 });
 
 var HTMLVideoElement = HTMLMediaElement.extend({
@@ -342,19 +358,9 @@ var HTMLVideoElement = HTMLMediaElement.extend({
 });
 
 var HTMLAudioElement = HTMLMediaElement.extend({
-    id: "id" + (new Date().getTime()),
-    sound: null,
-    
     //no additional properties
-    init: function(element) {
-      this._super(element);
-      
-      if (this.domElement.getAttribute("id")) {
-        this.id = this.domElement.getAttribute("id");
-      }
-      
+    createSound: function() {
       var that = this;
-      
       this.sound = soundManager.createSound({
           id: that.id,
           url: that.currentSrc,
@@ -363,10 +369,6 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           whileloading: that.whileloading,
           onid3: that.onid3
       });
-      
-      this.throwEvent("loadstart");
-      
-      this.sound.wrapper = this;
     },
     
     onfinish: function(e) {
