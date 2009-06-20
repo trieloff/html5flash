@@ -374,6 +374,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         this.wrapper.play();
       } else {
         this.wrapper.ended = true;
+        this.wrapper.throwEvent("ended");
       }
     },
     
