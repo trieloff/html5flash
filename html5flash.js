@@ -166,7 +166,114 @@ var HTMLMediaElement = Class.extend({
   
   createSound: function() {
     return {};
-  }
+  },
+    
+  onfinish: function(e) {
+    if (this.wrapper.loop) {
+      this.wrapper.play();
+    } else {
+      this.wrapper.ended = true;
+      this.wrapper.throwEvent("ended");
+    }
+  },
+  
+  onid3: function() {
+    this.wrapper.HAVE_METADATA;
+    this.wrapper.throwEvent("loadedmetadata");
+  },
+  
+  whileloading: function() {
+    if (this.readyState==3) {
+      this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
+      
+      var durationchange = (this.wrapper.duration!=this.duration / 1000) ? true : false;
+      this.wrapper.duration = this.duration / 1000;
+      
+      this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
+      this.wrapper.updateSeekable(this.duration / 1000);
+      if (durationchange) this.wrapper.throwEvent("durationchange");
+      this.wrapper.throwEvent("load");
+    } else if (this.readyState==2) {
+      //error
+      this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
+      this.wrapper.throwEvent("error");
+    } else if (this.readyState==1) {
+      //loading
+      this.wrapper.networkState = this.wrapper.NETWORK_LOADING;
+      var durationchange = (this.wrapper.duration!=this.durationEstimate / 1000) ? true : false;
+      this.wrapper.duration = this.durationEstimate / 1000;
+      
+      if (this.duration==this.position) {
+        this.wrapper.readyState = this.wrapper.HAVE_CURRENT_DATA;
+        this.wrapper.throwEvent("stalled");
+      } else if (this.duration>this.position) {
+        var canplay = (this.wrapper.readyState!=this.wrapper.HAVE_FUTURE_DATA) ? true : false;
+        this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
+        if (canplay) this.wrapper.throwEvent("canplay");
+        this.wrapper.throwEvent("progress");
+      }
+      
+      if (!this.wrapper.loadeddata) {
+        this.wrapper.loadeddata = true;
+        this.wrapper.throwEvent("loadeddata");
+      }
+      
+      if (durationchange) this.wrapper.throwEvent("durationchange");
+      this.wrapper.updateSeekable(this.duration / 1000);
+    } else if (this.readyState==0) {
+      //uninitialized
+      this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
+      this.wrapper.throwEvent("emptied");
+    }
+  },
+  
+  onload: function(success) {
+    if (success) {
+      this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
+      this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
+      var durationchange = (this.wrapper.duration!=this.duration / 1000) ? true : false;
+      this.wrapper.duration = this.duration / 1000;
+      if (durationchange) this.wrapper.throwEvent("durationchange");
+      this.wrapper.throwEvent("canplaythrough");
+      this.wrapper.throwEvent("load");
+    } else {
+      this.wrapper.readyState = this.wrapper.HAVE_NOTHING;
+      this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
+      this.wrapper.error = new MediaError(MediaError.prototype.NETWORK);
+      this.wrapper.throwEvent("error");
+    }
+  },
+  
+  whileplaying: function() {
+    this.wrapper.currentTime = this.position / 1000;
+    this.wrapper.checkCueRanges(this.position / 1000);
+    this.wrapper.updatePlayed(this.position / 1000);
+    this.wrapper.throwEvent("playing");
+  },
+  
+  //updates the played time range
+  updatePlayed: function(currentTime) {
+    if (this.played.length==0) {
+      //create a new time range
+      this.played.add(this.startTime, currentTime);
+    } else {
+      //extend the last time range
+      this.played.ends[this.played.length-1] = currentTime;
+    }
+  },
+  
+  //updates the played time range
+  updateSeekable: function(currentTime) {
+    if (this.seekable.length==0) {
+      //create a new time range
+      this.seekable.add(this.startTime, currentTime);
+    } else {
+      //extend the last time range
+      this.seekable.ends[this.seekable.length-1] = currentTime;
+    }
+  },
+  
+
   
   //returns void
   load: function() {
@@ -369,111 +476,6 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           whileloading: that.whileloading,
           onid3: that.onid3
       });
-    },
-    
-    onfinish: function(e) {
-      if (this.wrapper.loop) {
-        this.wrapper.play();
-      } else {
-        this.wrapper.ended = true;
-        this.wrapper.throwEvent("ended");
-      }
-    },
-    
-    onid3: function() {
-      this.wrapper.HAVE_METADATA;
-      this.wrapper.throwEvent("loadedmetadata");
-    },
-    
-    whileloading: function() {
-      if (this.readyState==3) {
-        this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
-        
-        var durationchange = (this.wrapper.duration!=this.duration / 1000) ? true : false;
-        this.wrapper.duration = this.duration / 1000;
-        
-        this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
-        this.wrapper.updateSeekable(this.duration / 1000);
-        if (durationchange) this.wrapper.throwEvent("durationchange");
-        this.wrapper.throwEvent("load");
-      } else if (this.readyState==2) {
-        //error
-        this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
-        this.wrapper.throwEvent("error");
-      } else if (this.readyState==1) {
-        //loading
-        this.wrapper.networkState = this.wrapper.NETWORK_LOADING;
-        var durationchange = (this.wrapper.duration!=this.durationEstimate / 1000) ? true : false;
-        this.wrapper.duration = this.durationEstimate / 1000;
-        
-        if (this.duration==this.position) {
-          this.wrapper.readyState = this.wrapper.HAVE_CURRENT_DATA;
-          this.wrapper.throwEvent("stalled");
-        } else if (this.duration>this.position) {
-          var canplay = (this.wrapper.readyState!=this.wrapper.HAVE_FUTURE_DATA) ? true : false;
-          this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
-          if (canplay) this.wrapper.throwEvent("canplay");
-          this.wrapper.throwEvent("progress");
-        }
-        
-        if (!this.wrapper.loadeddata) {
-          this.wrapper.loadeddata = true;
-          this.wrapper.throwEvent("loadeddata");
-        }
-        
-        if (durationchange) this.wrapper.throwEvent("durationchange");
-        this.wrapper.updateSeekable(this.duration / 1000);
-      } else if (this.readyState==0) {
-        //uninitialized
-        this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
-        this.wrapper.throwEvent("emptied");
-      }
-    },
-    
-    onload: function(success) {
-      if (success) {
-        this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
-        this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
-        var durationchange = (this.wrapper.duration!=this.duration / 1000) ? true : false;
-        this.wrapper.duration = this.duration / 1000;
-        if (durationchange) this.wrapper.throwEvent("durationchange");
-        this.wrapper.throwEvent("canplaythrough");
-        this.wrapper.throwEvent("load");
-      } else {
-        this.wrapper.readyState = this.wrapper.HAVE_NOTHING;
-        this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
-        this.wrapper.error = new MediaError(MediaError.prototype.NETWORK);
-        this.wrapper.throwEvent("error");
-      }
-    },
-    
-    whileplaying: function() {
-      this.wrapper.currentTime = this.position / 1000;
-      this.wrapper.checkCueRanges(this.position / 1000);
-      this.wrapper.updatePlayed(this.position / 1000);
-      this.wrapper.throwEvent("playing");
-    },
-    
-    //updates the played time range
-    updatePlayed: function(currentTime) {
-      if (this.played.length==0) {
-        //create a new time range
-        this.played.add(this.startTime, currentTime);
-      } else {
-        //extend the last time range
-        this.played.ends[this.played.length-1] = currentTime;
-      }
-    },
-    
-    //updates the played time range
-    updateSeekable: function(currentTime) {
-      if (this.seekable.length==0) {
-        //create a new time range
-        this.seekable.add(this.startTime, currentTime);
-      } else {
-        //extend the last time range
-        this.seekable.ends[this.seekable.length-1] = currentTime;
-      }
     },
     
     play: function() {
