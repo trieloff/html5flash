@@ -398,12 +398,12 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         this.wrapper.duration = this.durationEstimate;
         if (this.duration==this.position) {
           this.wrapper.readyState = this.wrapper.HAVE_CURRENT_DATA;
+          this.wrapper.throwEvent("stalled");
         } else if (this.duration>this.position) {
           this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
+          this.wrapper.throwEvent("progress");
         }
         this.wrapper.updateSeekable(this.duration / 1000);
-        
-        this.wrapper.throwEvent("progress");
       } else if (this.readyState==0) {
         //uninitialized
         this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
