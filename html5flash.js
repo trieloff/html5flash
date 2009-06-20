@@ -414,6 +414,11 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           this.wrapper.throwEvent("progress");
         }
         
+        if (!this.wrapper.loadeddata) {
+          this.wrapper.loadeddata = true;
+          this.wrapper.throwEvent("loadeddata");
+        }
+        
         if (durationchange) this.wrapper.throwEvent("durationchange");
         this.wrapper.updateSeekable(this.duration / 1000);
       } else if (this.readyState==0) {
