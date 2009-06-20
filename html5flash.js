@@ -430,6 +430,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         var durationchange (this.wrapper.duration!=this.duration / 1000) ? true : false;
         this.wrapper.duration = this.duration / 1000;
         if (durationchange) this.wrapper.throwEvent("durationchange");
+        this.wrapper.throwEvent("canplaythrough");
         this.wrapper.throwEvent("load");
       } else {
         this.wrapper.readyState = this.wrapper.HAVE_NOTHING;
