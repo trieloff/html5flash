@@ -400,6 +400,8 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
         }
         this.wrapper.updateSeekable(this.duration / 1000);
+        
+        this.wrapper.throwEvent("progress");
       } else if (this.readyState==0) {
         //uninitialized
         this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
