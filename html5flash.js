@@ -364,7 +364,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           onid3: that.onid3
       });
       
-      this.trowEvent("loadstart");
+      this.throwEvent("loadstart");
       
       this.sound.wrapper = this;
     },
