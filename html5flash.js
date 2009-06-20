@@ -158,7 +158,7 @@ var HTMLMediaElement = Class.extend({
       this.id = this.domElement.getAttribute("id");
     }
     
-    this.sound = this.createSound();
+    this.sound = soundManager.createSound(this.createSound());
     
     this.throwEvent("loadstart");
     this.sound.wrapper = this;
@@ -468,14 +468,15 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     //no additional properties
     createSound: function() {
       var that = this;
-      this.sound = soundManager.createSound({
+      var soundconfig = {
           id: that.id,
           url: that.currentSrc,
           autoLoad: that.autobuffer,
           autoPlay: that.autoplay,
           whileloading: that.whileloading,
           onid3: that.onid3
-      });
+      };
+      return soundconfig;
     },
     
     play: function() {
