@@ -244,7 +244,7 @@ var HTMLMediaElement = Class.extend({
         } catch (t) {/*go through all event listeners*/}
       }
     }
-  }
+  },
   
   //returns void
   //className, id - String
