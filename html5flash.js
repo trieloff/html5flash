@@ -2,6 +2,7 @@ soundManager.url = './'; // path to directory containing SoundManager2 .SWF file
 soundManager.flashVersion = 9; // flash 9.0r115+ required for MovieStar mode
 soundManager.useMovieStar = true; // enable AAC/MPEG4 video in SM2
 soundManager.allowFullScreen = true; // enable full-screen mode
+soundManager.wmode = 'transparent';
 
 //from http://ejohn.org/blog/simple-javascript-inheritance/
 // Inspired by base2 and Prototype
@@ -506,6 +507,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       this.domContainer.style.height = this.height + "px";
       this.domContainer.style.top = element.style.top;
       this.domContainer.style.left = element.style.left;
+      this.domContainer.style.backgroundImage = "url(" + this.poster + ")";
     },
     
     createSound: function() {
@@ -518,7 +520,8 @@ var HTMLVideoElement = HTMLMediaElement.extend({
           whileloading: that.whileloading,
           onid3: that.onid3,
           useMovieStar: true,
-          useVideo: true
+          useVideo: true,
+          wmode: "transparent"
       };
       return soundconfig;
     },
