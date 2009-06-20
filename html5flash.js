@@ -408,7 +408,9 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           this.wrapper.readyState = this.wrapper.HAVE_CURRENT_DATA;
           this.wrapper.throwEvent("stalled");
         } else if (this.duration>this.position) {
+          var canplay = (this.wrapper.readyState!=this.wrapper.HAVE_FUTURE_DATA) ? true : false;
           this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
+          if (canplay) this.wrapper.throwEvent("canplay");
           this.wrapper.throwEvent("progress");
         }
         
