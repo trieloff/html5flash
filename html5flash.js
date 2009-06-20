@@ -1,3 +1,8 @@
+soundManager.url = './'; // path to directory containing SoundManager2 .SWF file
+soundManager.flashVersion = 9; // flash 9.0r115+ required for MovieStar mode
+soundManager.useMovieStar = true; // enable AAC/MPEG4 video in SM2
+soundManager.allowFullScreen = true; // enable full-screen mode
+
 //from http://ejohn.org/blog/simple-javascript-inheritance/
 // Inspired by base2 and Prototype
 (function(){
@@ -471,14 +476,21 @@ var HTMLMediaElement = Class.extend({
 });
 
 var HTMLVideoElement = HTMLMediaElement.extend({
-    width: "0px",
-    height: "0px",
+    width: "300px",
+    height: "200px",
     videoWidth: 0,
     videoHeight: 0,
     //poster frame
     poster: null,
     
     init: function(element) {
+      this.domContainer = document.getElementById("sm2-container");
+      if (this.domContainer==null) {
+        this.domContainer = document.createElement("div");
+        this.domContainer.id = "sm2-container";
+        element.parentNode.insertBefore(this.domContainer, element);
+      }
+      
       try {
         this._super(element);
       } catch (e) {
@@ -487,6 +499,41 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       this.height = this.domElement.getAttribute("height");
       this.width = this.domElement.getAttribute("width");
       this.poster = this.domElement.getAttribute("poster");
+      
+      
+      this.domContainer.style.position = element.style.position;
+      this.domContainer.style.width = this.width + "px";
+      this.domContainer.style.height = this.height + "px";
+      this.domContainer.style.top = element.style.top;
+      this.domContainer.style.left = element.style.left;
+    },
+    
+    createSound: function() {
+      var that = this;
+      var soundconfig = {
+          id: that.id,
+          url: that.currentSrc,
+          autoLoad: that.autobuffer,
+          autoPlay: that.autoplay,
+          whileloading: that.whileloading,
+          onid3: that.onid3,
+          useMovieStar: true,
+          useVideo: true
+      };
+      return soundconfig;
+    },
+    
+    canPlayType: function(type) {
+      if (type.match(/^video\/flv/)) {
+        return "probably";
+      }
+      if (type.match(/^video\/quicktime/)) {
+        return "probably";
+      }
+      if (type.match(/^video\//)) {
+        return "maybe";
+      }
+      return "no";
     }
 });
 
