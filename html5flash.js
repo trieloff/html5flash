@@ -387,6 +387,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         this.wrapper.duration = this.duration / 1000;
         this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
         this.wrapper.updateSeekable(this.duration / 1000);
+        this.wrapper.throwEvent("load");
       } else if (this.readyState==2) {
         //error
         this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
@@ -413,6 +414,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
         this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
         this.wrapper.duration = this.duration;
+        this.wrapper.throwEvent("load");
       } else {
         this.wrapper.readyState = this.wrapper.HAVE_NOTHING;
         this.wrapper.networkState = this.wrapper.NETWORK_NO_SOURCE;
