@@ -486,11 +486,12 @@ var HTMLVideoElement = HTMLMediaElement.extend({
     
     init: function(element) {
       this.domContainer = document.getElementById("sm2-container");
+      /*
       if (this.domContainer==null) {
-        this.domContainer = document.createElement("div");
-        this.domContainer.id = "sm2-container";
         element.parentNode.insertBefore(this.domContainer, element);
       }
+      */
+      
       
       try {
         this._super(element);
