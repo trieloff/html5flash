@@ -156,8 +156,10 @@ var HTMLMediaElement = Class.extend({
     
     if (this.domElement.getAttribute("id")) {
       this.id = this.domElement.getAttribute("id");
+    } else {
+      this.id = "id" + (new Date().getTime());
     }
-    
+    debugger;
     this.sound = soundManager.createSound(this.createSound());
     
     this.throwEvent("loadstart");
@@ -165,7 +167,10 @@ var HTMLMediaElement = Class.extend({
   },
   
   createSound: function() {
-    return {};
+    var that = this;
+    return {
+      id: that.id
+    };
   },
     
   onfinish: function(e) {
@@ -485,7 +490,11 @@ var HTMLVideoElement = HTMLMediaElement.extend({
     poster: null,
     
     init: function(element) {
-      this._super(element);
+      try {
+        this._super(element);
+      } catch (e) {
+        console.error(e);
+      }
       this.height = this.domElement.getAttribute("height");
       this.width = this.domElement.getAttribute("width");
       this.poster = this.domElement.getAttribute("poster");
