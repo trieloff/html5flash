@@ -474,10 +474,12 @@ var HTMLAudioElement = HTMLMediaElement.extend({
             onid3: that.onid3
         });
       }
+      this.throwEvent("play");
     },
     
     pause: function() {
       this.sound.pause();
+      this.throwEvent("pause");
     },
     
     canPlayType: function(type) {
