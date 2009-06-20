@@ -159,7 +159,6 @@ var HTMLMediaElement = Class.extend({
     } else {
       this.id = "id" + (new Date().getTime());
     }
-    debugger;
     this.sound = soundManager.createSound(this.createSound());
     
     this.throwEvent("loadstart");
@@ -341,16 +340,6 @@ var HTMLMediaElement = Class.extend({
   //returns String
   canPlayType: function(type) {
     return "no";
-  },
-  
-  play: function() {
-    //TODO
-    //purely abstract
-  },
-  
-  pause: function() {
-    //TODO
-    //purely abstract
   },
   
   addEventListener: function(type, listener, useCapture) {
