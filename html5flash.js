@@ -386,9 +386,13 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     whileloading: function() {
       if (this.readyState==3) {
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
+        
+        var durationchange (this.wrapper.duration!=this.duration / 1000) ? true : false;
         this.wrapper.duration = this.duration / 1000;
+        
         this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
         this.wrapper.updateSeekable(this.duration / 1000);
+        if (durationchange) this.wrapper.throwEvent("durationchange");
         this.wrapper.throwEvent("load");
       } else if (this.readyState==2) {
         //error
@@ -397,7 +401,9 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       } else if (this.readyState==1) {
         //loading
         this.wrapper.networkState = this.wrapper.NETWORK_LOADING;
-        this.wrapper.duration = this.durationEstimate;
+        var durationchange (this.wrapper.duration!=this.durationEstimate / 1000) ? true : false;
+        this.wrapper.duration = this.durationEstimate / 1000;
+        
         if (this.duration==this.position) {
           this.wrapper.readyState = this.wrapper.HAVE_CURRENT_DATA;
           this.wrapper.throwEvent("stalled");
@@ -405,6 +411,8 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           this.wrapper.readyState = this.wrapper.HAVE_FUTURE_DATA;
           this.wrapper.throwEvent("progress");
         }
+        
+        if (durationchange) this.wrapper.throwEvent("durationchange");
         this.wrapper.updateSeekable(this.duration / 1000);
       } else if (this.readyState==0) {
         //uninitialized
@@ -417,7 +425,9 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       if (success) {
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
         this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
-        this.wrapper.duration = this.duration;
+        var durationchange (this.wrapper.duration!=this.duration / 1000) ? true : false;
+        this.wrapper.duration = this.duration / 1000;
+        if (durationchange) this.wrapper.throwEvent("durationchange");
         this.wrapper.throwEvent("load");
       } else {
         this.wrapper.readyState = this.wrapper.HAVE_NOTHING;
