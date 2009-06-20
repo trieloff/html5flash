@@ -387,7 +387,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       if (this.readyState==3) {
         this.wrapper.networkState = this.wrapper.NETWORK_LOADED;
         
-        var durationchange (this.wrapper.duration!=this.duration / 1000) ? true : false;
+        var durationchange = (this.wrapper.duration!=this.duration / 1000) ? true : false;
         this.wrapper.duration = this.duration / 1000;
         
         this.wrapper.readyState = this.wrapper.HAVE_ENOUGH_DATA;
