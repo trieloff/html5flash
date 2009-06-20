@@ -407,6 +407,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       } else if (this.readyState==0) {
         //uninitialized
         this.wrapper.networkState = this.wrapper.NETWORK_EMPTY;
+        this.wrapper.throwEvent("emptied");
       }
     },
     
