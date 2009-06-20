@@ -429,6 +429,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       this.wrapper.currentTime = this.position / 1000;
       this.wrapper.checkCueRanges(this.position / 1000);
       this.wrapper.updatePlayed(this.position / 1000);
+      this.wrapper.throwEvent("playing");
     },
     
     //updates the played time range
