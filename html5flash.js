@@ -3,6 +3,7 @@ soundManager.flashVersion = 9; // flash 9.0r115+ required for MovieStar mode
 soundManager.useMovieStar = true; // enable AAC/MPEG4 video in SM2
 soundManager.allowFullScreen = true; // enable full-screen mode
 soundManager.wmode = 'transparent';
+soundManager.debugMode = false;
 
 //from http://ejohn.org/blog/simple-javascript-inheritance/
 // Inspired by base2 and Prototype
@@ -153,6 +154,7 @@ var HTMLMediaElement = Class.extend({
   
   init: function(element) {
     this.domElement = element;
+    this.domElement.wrapper = this;
     this.src = this.domElement.getAttribute("src");
     this.autobuffer = (this.domElement.getAttribute("autobuffer")!=null);
     this.autoplay = (this.domElement.getAttribute("autoplay")!=null);
@@ -745,15 +747,25 @@ function getHTML5Tags() {
   for (var i=0;i<audios.length;i++) {
     if (audios[i].play) {
       html5tags.push(audios[i]);
+    } else if (audios[i].wrapper) {
+      html5tags.push(audios[i].wrapper);
+    } else {
+      html5tags.push(new HTMLAudioElement(audios[i]));
     }
-    html5tags.push(new HTMLAudioElement(audios[i]));
   }
   
   for (var i=0;i<videos.length;i++) {
     if (videos[i].play) {
       html5tags.push(videos[i]);
+    } else if (videos[i].wrapper) {
+      html5tags.push(videos[i].wrapper);
+    } else {
+      html5tags.push(new HTMLVideoElement(videos[i]));
     }
-    html5tags.push(new HTMLVideoElement(videos[i]));
   }
   return html5tags;
 }
+
+soundManager.onload = function() {
+    getHTML5Tags();
+};
