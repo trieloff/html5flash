@@ -179,6 +179,8 @@ var HTMLMediaElement = Class.extend({
   },
     
   onfinish: function(e) {
+    this.wrapper.currentTime = 0;
+    this.wrapper.throwEvent("timeupdate");
     if (this.wrapper.loop) {
       this.wrapper.play();
     } else {
