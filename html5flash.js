@@ -553,9 +553,10 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       endknob.style.cssFloat = "right";
       endknob.style.fontFamily = "Helvetica";
       endknob.style.fontSize = "12px";
-      endknob.style.textAlign = "right";
+      endknob.style.textAlign = "center";
+      endknob.style.textIndent = "18px";
       endknob.style.lineHeight = "18px";
-      endknob.innerHTML = "0:00";
+      endknob.innerHTML = "00:00";
       
       control.innerHTML = "play/pause";
       control.href="#";
@@ -589,6 +590,34 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       this.addEventListener("ended", function() {
           control.innerHTML = "play";
           control.style.backgroundPosition = "0px -16px";
+      });
+    
+      this.addEventListener("timeupdate", function() {
+          var remaining = this.currentTime;
+          var hours = Math.floor(remaining / 3600);
+          remaining = remaining -   (hours * 3600);
+          var minutes = Math.floor(remaining / 60);
+          remaining = remaining -   (minutes * 60);
+          remaining = Math.floor(remaining);
+          
+          text = "";
+          if (hours>0) {
+            text += hours;
+            text += ":";
+          }
+          
+          if (minutes<10) {
+            text += "0";
+          }
+          text += minutes;
+          text += ":";
+          
+          if (remaining<10) {
+            text += "0";
+          }
+          text += remaining;
+          
+          endknob.innerHTML = text;
       });
       
       
