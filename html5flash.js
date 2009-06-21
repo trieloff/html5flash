@@ -539,6 +539,17 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       controls.style.position = "relative";
       controls.style.left = "16px";
       
+      var playhead = document.createElement("div");
+      controls.appendChild(playhead);
+      playhead.innerHTML="o";
+      playhead.style.position = "relative";
+      playhead.style.cssFloat = "left";
+      playhead.style.backgroundImage = "url(videocontrols-slider.png)";
+      playhead.style.height = "16px";
+      playhead.style.width = "16px";
+      playhead.style.textIndent = "16px";
+      playhead.style.overflow = "hidden";
+      
       var endknob = document.createElement("div");
       controls.appendChild(endknob);
       
@@ -572,7 +583,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       control.style.textIndent = "16px";
       control.style.backgroundPosition = "0px -16px";
       control.style.position = "relative";
-      control.style.left = "-16px";
+      control.style.left = "-32px";
       
       control.style.display = "block";
       control.onclick = function() {
@@ -606,6 +617,13 @@ var HTMLVideoElement = HTMLMediaElement.extend({
           var minutes = Math.floor(remaining / 60);
           remaining = remaining -   (minutes * 60);
           remaining = Math.floor(remaining);
+          
+          var left = ((controls.offsetWidth - 24) * this.currentTime / this.duration);
+          if (left) {
+            playhead.style.left = Math.floor(left) + "px";
+          } else {
+            playhead.style.left = "0px";
+          }
           
           text = "";
           if (hours>0) {
