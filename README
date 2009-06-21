@@ -1,0 +1,22 @@
+html5flash is an browser-independent implementation of the HTML5 video and
+audio tag. If you are planning to use video and audio on your web site, but
+
+- do not want to develop in flash
+- do not want to invent a proprietory API for controlling video and audio
+- want to be future proof when HTML5 gets wider adoption
+
+then html5flash is right for you. In order to use it, you have to add following
+tags into the head of your HTML page:
+
+<script src="soundmanager2.js"></script>
+<script src="html5flash.js"></script>
+
+Then you can add <audio> and <video> elements to your page. You should take 
+a look at the examples, at the HTML5 working draft and at the html5flash Wiki
+for further instructions.
+
+html5flash uses Scott Schiller's excellent soundmanager2 library, which
+provides the Flash implementation of an invisible audio player and chromeless
+video player.
+
+html5flash is licensed under the terms of the Apache Software License.
