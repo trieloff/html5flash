@@ -536,6 +536,8 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       controls.style.backgroundImage = "url(videocontrols-center.png)";
       controls.style.width = (this.domElement.getAttribute("width") - 64 ) + "px";
       controls.style.height = "16px";
+      controls.style.position = "relative";
+      controls.style.left = "16px";
       
       var endknob = document.createElement("div");
       controls.appendChild(endknob);
@@ -550,7 +552,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       endknob.style.position = "relative";
       endknob.style.width = "64px";
       endknob.style.height = "16px";
-      endknob.style.left = "64px";
+      endknob.style.left = "50px";
       endknob.style.overflow = "hidden";
       endknob.style.cssFloat = "right";
       endknob.style.fontFamily = "Helvetica";
@@ -569,6 +571,9 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       control.style.overflow = "hidden";
       control.style.textIndent = "16px";
       control.style.backgroundPosition = "0px -16px";
+      control.style.position = "relative";
+      control.style.left = "-16px";
+      
       control.style.display = "block";
       control.onclick = function() {
         if (that.paused||that.ended) {
