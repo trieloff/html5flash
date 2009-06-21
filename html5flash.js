@@ -658,7 +658,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       if (type.match(/^video\/flv/)) {
         return "probably";
       }
-      if (type.match(/^video\/quicktime/)) {
+      if (type.match(/^video\/(x-)?m4v/)) {
         return "probably";
       }
       if (type.match(/^video\//)) {
