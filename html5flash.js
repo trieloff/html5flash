@@ -530,17 +530,42 @@ var HTMLVideoElement = HTMLMediaElement.extend({
           wmode: "transparent"
       };
       
+      var controls = document.createElement("div");
+      controls.style.backgroundImage = "url(videocontrols-center.png)";
+      controls.style.width = (this.domElement.getAttribute("width") - 64 ) + "px";
+      controls.style.height = "16px";
+      
+      var endknob = document.createElement("div");
+      controls.appendChild(endknob);
+      
       var control = document.createElement("a");
+      controls.appendChild(control);
+      
+      endknob.style.backgroundImage = "url(videocontrols.png)";
+      endknob.style.backgroundRepeat = "no-repeat";
+      endknob.style.backgroundPosition = "-32px 0px";
+      endknob.style.align = "right";
+      endknob.style.position = "relative";
+      endknob.style.width = "64px";
+      endknob.style.height = "16px";
+      endknob.style.left = "64px";
+      endknob.style.overflow = "hidden";
+      endknob.style.cssFloat = "right";
+      endknob.style.fontFamily = "Helvetica";
+      endknob.style.fontSize = "12px";
+      endknob.style.textAlign = "right";
+      endknob.style.lineHeight = "18px";
+      endknob.innerHTML = "0:00";
       
       control.innerHTML = "play/pause";
       control.href="#";
-      control.style.backgroundImage = "url(audiocontrols.png)";
+      control.style.backgroundImage = "url(videocontrols.png)";
       control.style.backgroundRepeat = "no-repeat";
       control.style.width = "16px";
       control.style.height = "16px";
       control.style.overflow = "hidden";
       control.style.textIndent = "16px";
-      control.style.backgroundPosition = "-16px 0px";
+      control.style.backgroundPosition = "0px -16px";
       control.style.display = "block";
       control.onclick = function() {
         if (that.paused||that.ended) {
@@ -553,21 +578,21 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       
       this.addEventListener("play", function() {
           control.innerHTML = "pause";
-          control.style.backgroundPosition = "-32px 0px";
+          control.style.backgroundPosition = "0px -0px";
       });
       
       this.addEventListener("pause", function() {
           control.innerHTML = "play";
-          control.style.backgroundPosition = "-16px 0px";
+          control.style.backgroundPosition = "0px -16px";
       });
       
       this.addEventListener("ended", function() {
           control.innerHTML = "play";
-          control.style.backgroundPosition = "-16px 0px";
+          control.style.backgroundPosition = "0px -16px";
       });
       
       
-      this.domElement.parentNode.insertBefore(control, this.domElement);
+      this.domElement.parentNode.insertBefore(controls, this.domElement);
       
       
       return soundconfig;
