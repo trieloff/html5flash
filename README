@@ -15,6 +15,11 @@ Then you can add <audio> and <video> elements to your page. You should take
 a look at the examples, at the HTML5 working draft and at the html5flash Wiki
 for further instructions.
 
+For videos you need additionally following tag in your HTML body, where you
+want the video to appear:
+
+<div id="sm2-container"></div>
+
 html5flash uses Scott Schiller's excellent soundmanager2 library, which
 provides the Flash implementation of an invisible audio player and chromeless
 video player.
