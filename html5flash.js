@@ -529,6 +529,47 @@ var HTMLVideoElement = HTMLMediaElement.extend({
           useVideo: true,
           wmode: "transparent"
       };
+      
+      var control = document.createElement("a");
+      
+      control.innerHTML = "play/pause";
+      control.href="#";
+      control.style.backgroundImage = "url(audiocontrols.png)";
+      control.style.backgroundRepeat = "no-repeat";
+      control.style.width = "16px";
+      control.style.height = "16px";
+      control.style.overflow = "hidden";
+      control.style.textIndent = "16px";
+      control.style.backgroundPosition = "-16px 0px";
+      control.style.display = "block";
+      control.onclick = function() {
+        if (that.paused||that.ended) {
+          that.play();
+        } else {
+          that.pause();
+        }
+        return false;
+      };
+      
+      this.addEventListener("play", function() {
+          control.innerHTML = "pause";
+          control.style.backgroundPosition = "-32px 0px";
+      });
+      
+      this.addEventListener("pause", function() {
+          control.innerHTML = "play";
+          control.style.backgroundPosition = "-16px 0px";
+      });
+      
+      this.addEventListener("ended", function() {
+          control.innerHTML = "play";
+          control.style.backgroundPosition = "-16px 0px";
+      });
+      
+      
+      this.domElement.parentNode.insertBefore(control, this.domElement);
+      
+      
       return soundconfig;
     },
     
