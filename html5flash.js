@@ -137,7 +137,7 @@ var HTMLMediaElement = Class.extend({
   startTime: 0.0,
   //readonly
   duration: 0.0,
-  paused: false,
+  paused: true,
   defaultPlaybackRate: 1.0,
   playbackRate: 1.0,
   //TimeRanges - readonly
@@ -292,10 +292,14 @@ var HTMLMediaElement = Class.extend({
     
     if (this.sound.playState==1) {
       this.sound.position = Math.floor(this.currentTime * 1000);
+      this.paused = false;
+      this.ended = false;
       this.sound.resume();
     } else {
       var that = this;
       this.sound.wrapper = this;
+      this.paused = false;
+      this.ended = false;
       this.sound.play({
           onfinish: that.onfinish,
           whileplaying: that.whileplaying,
@@ -308,6 +312,7 @@ var HTMLMediaElement = Class.extend({
   },
   
   pause: function() {
+    this.paused = true;
     this.sound.pause();
     this.throwEvent("pause");
   },
@@ -553,6 +558,35 @@ var HTMLAudioElement = HTMLMediaElement.extend({
           whileloading: that.whileloading,
           onid3: that.onid3
       };
+      
+      var control = document.createElement("a");
+      
+      control.innerHTML = "play/pause";
+      control.href="#";
+      control.onclick = function() {
+        if (that.paused||that.ended) {
+          that.play();
+        } else {
+          that.pause();
+        }
+        return false;
+      };
+      
+      this.addEventListener("play", function() {
+          control.innerHTML = "pause";
+      });
+      
+      this.addEventListener("pause", function() {
+          control.innerHTML = "play";
+      });
+      
+      this.addEventListener("ended", function() {
+          control.innerHTML = "play";
+      });
+      
+      this.domElement.parentNode.insertBefore(control, this.domElement);
+      
+      
       return soundconfig;
     },
         
