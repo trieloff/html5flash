@@ -1,16 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title></title>
-    <style type="text/css">
-      #soundmanager-debug {
-       /* SM2 debug container (optional, use or customize this as you like - makes in-browser debug output more useable) */
-       position:fixed;_position:absolute;right:1em;bottom:1em;width:50em;height:18em;overflow:auto;background:#fff;margin:1em;padding:1em;border:1px solid #999;font-family:monaco,"lucida console",verdana,tahoma,"sans serif";font-size:x-small;line-height:1.5em;opacity:0.9;filter:alpha(opacity=90);
-      }
-      </style>
-    
+    <title>Combination Test</title>
   </head>
-  <body onload="runTests()">
+  <body onload="">
     <audio src="media/audio.mp3" autobuffer="true" controls="true"></audio>
     <div id="test1">
     
@@ -28,10 +21,8 @@
     <div id="test2">
     
     </div>
-    
-    <video controls="false" autoplay="true">
-      <source src="media/video.ogg" type="video/ogg" ></source>
-      <source src="media/video.mov" type="video/quicktime" ></source>
+    <div id="sm2-container"></div>
+    <video controls="false" autoplay="true" width="640" height="480">
       <source src="media/video.flv" type="video/flv" ></source>
     </video>
     
