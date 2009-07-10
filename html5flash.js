@@ -354,7 +354,7 @@ var HTMLMediaElement = Class.extend({
   
   //returns String
   canPlayType: function(type) {
-    return "no";
+    return "";
   },
   
   addEventListener: function(type, listener, useCapture) {
@@ -664,7 +664,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       if (type.match(/^video\//)) {
         return "maybe";
       }
-      return "no";
+      return "";
     }
 });
 
@@ -736,7 +736,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       if (type.match(/^audio\//)) {
         return "maybe";
       }
-      return "no";
+      return "";
     }
 });
 
