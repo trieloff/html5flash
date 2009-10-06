@@ -528,7 +528,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       };
       
       var controls = document.createElement("div");
-      controls.style.backgroundImage = "url(videocontrols-center.png)";
+      controls.style.backgroundImage = "url("+html5flash.url+"videocontrols-center.png)";
       controls.style.width = (this.domElement.getAttribute("width") - 64 ) + "px";
       controls.style.height = "16px";
       controls.style.position = "relative";
@@ -539,7 +539,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       playhead.innerHTML="o";
       playhead.style.position = "relative";
       playhead.style.cssFloat = "left";
-      playhead.style.backgroundImage = "url(videocontrols-slider.png)";
+      playhead.style.backgroundImage = "url("+html5flash.url+"videocontrols-slider.png)";
       playhead.style.height = "16px";
       playhead.style.width = "16px";
       playhead.style.textIndent = "16px";
@@ -551,7 +551,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       var control = document.createElement("a");
       controls.appendChild(control);
       
-      endknob.style.backgroundImage = "url(videocontrols.png)";
+      endknob.style.backgroundImage = "url("+html5flash.url+"videocontrols.png)";
       endknob.style.backgroundRepeat = "no-repeat";
       endknob.style.backgroundPosition = "-32px 0px";
       endknob.style.align = "right";
@@ -570,7 +570,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       
       control.innerHTML = "play/pause";
       control.href="#";
-      control.style.backgroundImage = "url(videocontrols.png)";
+      control.style.backgroundImage = "url("+html5flash.url+"videocontrols.png)";
       control.style.backgroundRepeat = "no-repeat";
       control.style.width = "16px";
       control.style.height = "16px";
@@ -678,7 +678,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
       
       control.innerHTML = "play/pause";
       control.href="#";
-      control.style.backgroundImage = "url(audiocontrols.png)";
+      control.style.backgroundImage = "url("+html5flash.url+"audiocontrols.png)";
       control.style.backgroundRepeat = "no-repeat";
       control.style.width = "16px";
       control.style.height = "16px";
@@ -772,7 +772,7 @@ function initSoundManager(media) {
   
 //  document.write("<div id='sm2-container'></div>");
   soundManager = new SoundManager();
-  soundManager.url = './'; // path to directory containing SoundManager2 .SWF file
+  soundManager.url = html5flash.url; // path to directory containing SoundManager2 .SWF file
   soundManager.flashVersion = 9; // flash 9.0r115+ required for MovieStar mode
   soundManager.useMovieStar = true; // enable AAC/MPEG4 video in SM2
   soundManager.allowFullScreen = true; // enable full-screen mode
