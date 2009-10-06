@@ -1,10 +1,3 @@
-soundManager.url = './'; // path to directory containing SoundManager2 .SWF file
-soundManager.flashVersion = 9; // flash 9.0r115+ required for MovieStar mode
-soundManager.useMovieStar = true; // enable AAC/MPEG4 video in SM2
-soundManager.allowFullScreen = true; // enable full-screen mode
-soundManager.wmode = 'transparent';
-soundManager.debugMode = false;
-
 //from http://ejohn.org/blog/simple-javascript-inheritance/
 // Inspired by base2 and Prototype
 (function(){
@@ -648,7 +641,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       });
       
       
-      this.domElement.parentNode.insertBefore(controls, this.domElement);
+      this.domElement.appendChild(controls);
       
       
       return soundconfig;
@@ -740,7 +733,7 @@ var HTMLAudioElement = HTMLMediaElement.extend({
     }
 });
 
-function getHTML5Tags() {
+function getHTML5Tags() {  
   var audios = document.getElementsByTagName("audio");
   var videos = document.getElementsByTagName("video");
   var html5tags = [];
@@ -750,7 +743,8 @@ function getHTML5Tags() {
     } else if (audios[i].wrapper) {
       html5tags.push(audios[i].wrapper);
     } else {
-      html5tags.push(new HTMLAudioElement(audios[i]));
+      initSoundManager(audios[i]).audios.push(audios[i]);
+      initSoundManager().html5tags = html5tags;
     }
   }
   
@@ -760,12 +754,42 @@ function getHTML5Tags() {
     } else if (videos[i].wrapper) {
       html5tags.push(videos[i].wrapper);
     } else {
-      html5tags.push(new HTMLVideoElement(videos[i]));
+      var onloadfunction = initSoundManager.onload;
+      initSoundManager(videos[i]).videos.push(videos[i]);
+      initSoundManager().html5tags = html5tags;
     }
   }
   return html5tags;
 }
 
-soundManager.onload = function() {
-    getHTML5Tags();
-};
+function initSoundManager(media) {
+  if (soundManager!=null) {
+    return soundManager;
+  }
+  var container = document.createElement("div");
+  container.id = "sm2-container";
+  media.appendChild(container);
+  
+//  document.write("<div id='sm2-container'></div>");
+  soundManager = new SoundManager();
+  soundManager.url = './'; // path to directory containing SoundManager2 .SWF file
+  soundManager.flashVersion = 9; // flash 9.0r115+ required for MovieStar mode
+  soundManager.useMovieStar = true; // enable AAC/MPEG4 video in SM2
+  soundManager.allowFullScreen = true; // enable full-screen mode
+  soundManager.wmode = 'transparent';
+  soundManager.debugMode = false;
+  
+  soundManager.videos = [];
+  soundManager.audios = [];
+  
+  soundManager.onload = function() {
+    for (var i=0;i<soundManager.videos.length;i++) {
+      soundManager.html5tags.push(new HTMLVideoElement(soundManager.videos[i]));
+    }
+    for (var i=0;i<soundManager.audios.length;i++) {
+      soundManager.html5tags.push(new HTMLAudioElement(soundManager.audios[i]));
+    }
+  }
+  
+  return soundManager;
+}

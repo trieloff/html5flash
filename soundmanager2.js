@@ -11,6 +11,7 @@
 */
 
 var soundManager = null;
+var SM2_DEFER = true;
 
 function SoundManager(smURL,smID) {
  
