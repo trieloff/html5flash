@@ -479,12 +479,13 @@ var HTMLMediaElement = Class.extend({
 });
 
 var HTMLVideoElement = HTMLMediaElement.extend({
-    width: "300px",
-    height: "200px",
+    width: false,
+    height: false,
     videoWidth: 0,
     videoHeight: 0,
     //poster frame
     poster: null,
+    controls: null,
     
     init: function(element) {
       this.domContainer = document.getElementById("sm2-container");
@@ -505,12 +506,24 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       this.poster = this.domElement.getAttribute("poster") || this.domElement.getAttribute("x-poster"); //Safari 4 has buggy support for poster
       
       
+      
       this.domContainer.style.position = element.style.position;
-      this.domContainer.style.width = this.width + "px";
-      this.domContainer.style.height = this.height + "px";
+      if (this.width) {
+        this.domContainer.style.width = this.width + "px";
+      }
+      if (this.height) {
+        this.domContainer.style.height = this.height + "px";
+      }
       this.domContainer.style.top = element.style.top;
       this.domContainer.style.left = element.style.left;
       this.domContainer.style.backgroundImage = "url(" + this.poster + ")";
+      
+      for(var i=0;i<element.childNodes.length;i++) {
+        var childNode = element.childNodes[i];
+        if ((childNode.nodeType==1)&&(childNode.nodeType!="SOURCE")&&(childNode!=this.domContainer)&&(childNode!=this.controls)) {
+          childNode.style.display = "none";
+        }
+      }
     },
     
     createSound: function() {
@@ -528,6 +541,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       };
       
       var controls = document.createElement("div");
+      this.controls = controls;
       controls.style.backgroundImage = "url("+html5flash.url+"videocontrols-center.png)";
       controls.style.width = (this.domElement.getAttribute("width") - 64 ) + "px";
       controls.style.height = "16px";
