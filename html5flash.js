@@ -502,7 +502,7 @@ var HTMLVideoElement = HTMLMediaElement.extend({
       }
       this.height = this.domElement.getAttribute("height");
       this.width = this.domElement.getAttribute("width");
-      this.poster = this.domElement.getAttribute("poster");
+      this.poster = this.domElement.getAttribute("poster") || this.domElement.getAttribute("x-poster"); //Safari 4 has buggy support for poster
       
       
       this.domContainer.style.position = element.style.position;
